@@ -3,4 +3,5 @@
     <string name = "login_text">Log in</string>
     <string name = "hint_userName">User Name</string>
     <string name = "Login_btn">Log In</string>
+    <string name = "id_thumbnail"> thumbnail image</string>
 </resources>
