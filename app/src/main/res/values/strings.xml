@@ -4,4 +4,5 @@
     <string name = "hint_userName">User Name</string>
     <string name = "Login_btn">Log In</string>
     <string name = "id_thumbnail"> thumbnail image</string>
+    <string name = "add_album_btn">add album</string>
 </resources>
