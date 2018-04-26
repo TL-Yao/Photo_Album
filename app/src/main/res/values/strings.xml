@@ -3,6 +3,7 @@
     <string name = "login_text">Log in</string>
     <string name = "hint_userName">User Name</string>
     <string name = "Login_btn">Log In</string>
-    <string name = "id_thumbnail"> thumbnail image</string>
     <string name = "add_album_btn">add album</string>
+    <string name="add_album_hint"> Album Name</string>
+    <string name="check_btn">Save</string>
 </resources>
