@@ -13,7 +13,7 @@ public class Photo implements Parcelable{
     private Uri photoUri;
 
 
-    public  Photo(String person, String location, Uri uri){
+    public Photo (String person, String location, Uri uri){
         person_tag = person;
         location_tag = location;
         photoUri = uri;
@@ -48,4 +48,6 @@ public class Photo implements Parcelable{
             return new Photo[size];
         }
     };
+
+    public Uri getPhotoUri() { return photoUri; }
 }

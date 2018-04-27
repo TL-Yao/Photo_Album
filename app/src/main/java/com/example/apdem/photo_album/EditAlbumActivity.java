@@ -8,12 +8,15 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 
 import com.example.apdem.photo_album.model.Album;
 
 public class EditAlbumActivity extends AppCompatActivity {
     public static final String KEY_EDIT_ALBUM = "edit_album";
+    public static final String KEY_DELETE_ALBUM_ID = "delete_album";
 
     private Album data;
 
@@ -30,6 +33,17 @@ public class EditAlbumActivity extends AppCompatActivity {
 
     private void setupUIForEdit(){
         ((EditText) findViewById(R.id.edit_album_name)).setText(data.getAlbumName());
+
+        LinearLayout delete = (LinearLayout)  findViewById(R.id.delete_album);
+        delete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent resultIntent = new Intent();
+                resultIntent.putExtra(KEY_DELETE_ALBUM_ID, data.getId());
+                setResult(Activity.RESULT_OK, resultIntent);
+                finish();
+            }
+        });
     }
 
     private Album initializeData() {

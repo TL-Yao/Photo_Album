@@ -5,5 +5,6 @@
     <string name = "Login_btn">Log In</string>
     <string name = "add_album_btn">add album</string>
     <string name="add_album_hint"> Album Name</string>
-    <string name="check_btn">Save</string>
+    <string name="check_btn"> Save </string>
+    <string name="delete"> Delete </string>
 </resources>

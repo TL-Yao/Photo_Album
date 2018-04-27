@@ -1,5 +1,6 @@
 package com.example.apdem.photo_album.model;
 
+import android.net.Uri;
 import android.os.Parcel;
 import android.os.Parcelable;
 
@@ -10,21 +11,17 @@ import java.util.UUID;
 public class Album implements Parcelable{
     private String albumName;
 
-    private int numPhoto;
-
     private List<Photo> photoList;
 
     private String id;
 
     public Album(String name){
         albumName = name.trim();
-        numPhoto = 0;
         photoList = new ArrayList<>();
         id = UUID.randomUUID().toString();
     }
     protected Album(Parcel in) {
         albumName = in.readString();
-        numPhoto = in.readInt();
         photoList = in.createTypedArrayList(Photo.CREATOR);
         id = in.readString();
     }
@@ -37,7 +34,6 @@ public class Album implements Parcelable{
     @Override
     public void writeToParcel(Parcel parcel, int i) {
         parcel.writeString(albumName);
-        parcel.writeInt(numPhoto);
         parcel.writeTypedList(photoList);
         parcel.writeString(id);
     }
@@ -55,7 +51,17 @@ public class Album implements Parcelable{
     };
 
     public String getAlbumName(){ return albumName; }
-    public int getNumPhoto() { return  numPhoto; }
+
+    public int getNumPhoto() { return  photoList.size(); }
+
     public String getId(){ return  id; }
+
+    public List<Photo> getPhotoList() { return photoList; }
+
+    public void addPhoto (Uri uri){
+        Photo photo = new Photo("","", uri);
+        photoList.add(photo);
+    }
+
     public void setAlbumName(String newName) { albumName = newName.trim(); }
 }

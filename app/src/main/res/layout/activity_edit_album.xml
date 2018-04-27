@@ -2,10 +2,45 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
-    <EditText
-        android:id="@+id/edit_album_name"
+
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:hint="@string/add_album_hint"/>
+        android:orientation="vertical">
+
+        <EditText
+            android:id="@+id/edit_album_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:hint="@string/add_album_hint" />
+
+        <LinearLayout
+            android:id="@+id/delete_album"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:clickable="true">
+
+            <ImageButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_delete_forever_black_24dp"
+               android:layout_gravity="center_vertical"
+                android:background="#00000000"/>
+
+            <TextView
+                android:layout_height="35dp"
+                android:layout_width="wrap_content"
+                android:id="@+id/education_edit_delete"
+                style="@style/DeleteButton"
+                android:text="@string/delete"
+                android:layout_gravity="center_vertical" />
+        </LinearLayout>
+
+    </LinearLayout>
+
+
+
 </LinearLayout>
