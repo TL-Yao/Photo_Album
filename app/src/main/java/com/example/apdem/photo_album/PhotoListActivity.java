@@ -60,6 +60,8 @@ public class PhotoListActivity extends AppCompatActivity {
     }
 
     private void setupPhotos(){
+        photoList = album.getPhotoList();
+
         LinearLayout photos_left = (LinearLayout) findViewById(R.id.left_photo_list);
         LinearLayout photos_right = (LinearLayout) findViewById(R.id.right_photo_list);
 
@@ -191,7 +193,6 @@ public class PhotoListActivity extends AppCompatActivity {
                     backFromPickPicture(uri);
                     break;
                 case REQ_CODE_BACK_FROM_EDITPHOTO:
-                    //TODO
                     String photo_id = data.getStringExtra(EditPhotoActivity.KEY_DELETE_PHOTO_ID);
 
                     if(photo_id != null){
