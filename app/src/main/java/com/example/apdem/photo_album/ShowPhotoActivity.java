@@ -11,6 +11,7 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
+import android.widget.TextView;
 
 import com.example.apdem.photo_album.Util.PermissionUtils;
 import com.example.apdem.photo_album.Util.SaveUtils;
@@ -43,6 +44,37 @@ public class ShowPhotoActivity extends AppCompatActivity{
         viewPager.setAdapter(new photoAdapter(getSupportFragmentManager()));
         viewPager.setCurrentItem(findPhoto());
 
+        Photo photo = photoList.get(findPhoto());
+
+        TextView person_tag = (TextView) findViewById(R.id.person_value);
+        TextView location_tag = (TextView) findViewById(R.id.location_value);
+
+        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+                setupUI(position);
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
+    }
+
+    private void setupUI(int position){
+        Photo photo = photoList.get(position);
+
+        TextView person_tag = (TextView) findViewById(R.id.person_value);
+        TextView location_tag = (TextView) findViewById(R.id.location_value);
+
+        person_tag.setText(photo.getPerson_tag());
+        location_tag.setText(photo.getLocation_tag());
     }
 
     private class photoAdapter extends FragmentPagerAdapter {

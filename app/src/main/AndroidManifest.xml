@@ -23,6 +23,7 @@
         <activity android:name=".EditAlbumActivity"/>
         <activity android:name=".PhotoListActivity"/>
         <activity android:name=".ShowPhotoActivity"/>
+        <activity android:name=".EditPhotoActivity"/>
     </application>
 
 </manifest>

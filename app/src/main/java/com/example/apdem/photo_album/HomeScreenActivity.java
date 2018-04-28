@@ -79,7 +79,6 @@ public class HomeScreenActivity extends AppCompatActivity {
 
             Album a =  albumList.get(i);
 
-            System.out.print("here " + a.getId());
             if(TextUtils.equals(a.getId(), editAlbum.getId())){
                 albumList.set(i, editAlbum);
                 break;

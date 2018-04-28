@@ -6,10 +6,10 @@
     android:orientation="vertical">
 
     <ImageView
+        android:id="@+id/photo_for_delete"
         android:layout_width="300dp"
         android:layout_height="300dp"
-        android:layout_gravity="center_horizontal"
-        android:src="@drawable/ic_delete_forever_black_24dp"/>
+        android:layout_gravity="center_horizontal" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -19,14 +19,56 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="25sp"
-            android:text = "@string/person_tag"/>
+            android:text = "@string/person_tag"
+            android:layout_gravity="bottom"/>
 
         <EditText
+            android:id="@+id/edit_person_value"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            />
+            android:textSize="25sp" />
 
     </LinearLayout>
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:textSize="25sp"
+            android:text = "@string/location_tag"/>
+
+        <EditText
+            android:id="@+id/edit_location_value"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="25sp"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/delete_photo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:clickable="true">
+
+        <ImageButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_delete_forever_black_24dp"
+            android:layout_gravity="center_vertical"
+            android:background="#00000000"/>
+
+        <TextView
+            android:layout_height="35dp"
+            android:layout_width="wrap_content"
+            style="@style/DeleteButton"
+            android:text="@string/delete"
+            android:layout_gravity="center_vertical" />
+    </LinearLayout>
 
 </LinearLayout>

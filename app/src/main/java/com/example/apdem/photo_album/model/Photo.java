@@ -55,4 +55,10 @@ public class Photo implements Parcelable{
 
     public Uri getPhotoUri() { return photoUri; }
     public String getId() { return id; }
+    public String getPerson_tag() { return person_tag; }
+    public String getLocation_tag() { return  location_tag; }
+
+    public void setPerson_tag(String person_val) { person_tag = person_val; }
+    public void setLocation_tag(String location_val) { location_tag = location_val; }
+
 }

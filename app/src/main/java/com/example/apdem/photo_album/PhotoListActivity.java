@@ -6,6 +6,7 @@ import android.content.ContentResolver;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
+import android.media.Image;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -34,7 +35,10 @@ import java.util.List;
 
 public class PhotoListActivity extends AppCompatActivity {
     public static final String KEY_ALBUM = "album";
+    public static final String KEY_PHOTO = "photo";
     private static final String MODEL_ALBUM = "albums";
+    private static final int REQ_CODE_BACK_FROM_EDITPHOTO = 103;
+    private static final int REQ_CODE_BACK_FROM_SHOW_PHOTO = 104;
     public static final  int PICK_IMAGE = 1;
 
     Album album;
@@ -83,9 +87,7 @@ public class PhotoListActivity extends AppCompatActivity {
 
     private void setupThumbnail(View albumView, final Photo photo){
         ImageView thumbnail = (ImageView) albumView.findViewById(R.id.thumbnail);
-
         ImageUtils.loadImage(photo.getPhotoUri(), thumbnail);
-
         thumbnail.setOnClickListener(new View.OnClickListener() {
             //debug: 可能出现，album里出现了改动，但没有反应在showPhotoActivity里
             //debug: 一会儿要打开返回值的，要更新列表。
@@ -98,12 +100,73 @@ public class PhotoListActivity extends AppCompatActivity {
                 //startActivityForResult(intent, REQ_CODE_BACK_FROM_PHOTO_LIST);
             }
         });
+
+        ImageView edit_photo = (ImageView) albumView.findViewById(R.id.edit_photo_btn);
+        edit_photo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(PhotoListActivity.this, EditPhotoActivity.class);
+                intent.putExtra(PhotoListActivity.KEY_PHOTO, photo);
+                startActivityForResult(intent, REQ_CODE_BACK_FROM_EDITPHOTO);
+            }
+        });
     }
 
     private void pickPicture(){
         Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
         startActivityForResult(Intent.createChooser(intent, "Select picture"),
                 PICK_IMAGE);
+    }
+
+    private void backFromPickPicture(Uri uri){
+        //parse temporary uri from google photo to path, then parse it to permanent Uri
+        if(uri != null){
+            String[] projection = {MediaStore.Video.Media.DATA};
+            Cursor cursor = getContentResolver().query(uri, projection, null, null, null);
+            int column_index = cursor
+                    .getColumnIndexOrThrow(MediaStore.Audio.Media.DATA);
+            cursor.moveToFirst();
+            String path = cursor.getString(column_index);
+            Uri fileUri = Uri.parse(path);
+            album.addPhoto(fileUri);
+
+            for(int i = 0; i < albumList.size(); ++i){
+                if(albumList.get(i).getId().equals(album.getId())){
+                    albumList.set(i, album);
+                }
+            }
+
+            SaveUtils.save(this, MODEL_ALBUM, albumList);
+            setupPhotos();
+        }
+    }
+
+    private void deletePhoto(String photoId){
+        for(Album currAlbum : albumList){
+            if(currAlbum.getId().equals(album.getId())){
+                for(int i = 0; i < currAlbum.getPhotoList().size(); ++i){
+                    if(currAlbum.getPhotoList().get(i).getId().equals(photoId)){
+                        currAlbum.getPhotoList().remove(i);
+                        SaveUtils.save(this, MODEL_ALBUM, albumList);
+                        setupPhotos();
+                    }
+                }
+            }
+        }
+    }
+
+    private void updatePhoto(Photo editPhoto){
+        for(Album currAlbum : albumList){
+            if(currAlbum.getId().equals(album.getId())){
+                for(int i = 0; i < currAlbum.getPhotoList().size(); ++i){
+                    if(currAlbum.getPhotoList().get(i).getId().equals(editPhoto.getId())){
+                        currAlbum.getPhotoList().set(i, editPhoto);
+                        SaveUtils.save(this, MODEL_ALBUM, albumList);
+                        setupPhotos();
+                    }
+                }
+            }
+        }
     }
 
     @Override
@@ -121,30 +184,23 @@ public class PhotoListActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if (data != null) {
-            if (requestCode == PICK_IMAGE && resultCode == Activity.RESULT_OK) {
-                Uri uri = data.getData();
+        if (data != null && resultCode == Activity.RESULT_OK) {
+            switch (requestCode){
+                case PICK_IMAGE:
+                    Uri uri = data.getData();
+                    backFromPickPicture(uri);
+                    break;
+                case REQ_CODE_BACK_FROM_EDITPHOTO:
+                    //TODO
+                    String photo_id = data.getStringExtra(EditPhotoActivity.KEY_DELETE_PHOTO_ID);
 
-                //parse temporary uri from google photo to path, then parse it to permanent Uri
-                if(uri != null){
-                    String[] projection = {MediaStore.Video.Media.DATA};
-                    Cursor cursor = getContentResolver().query(uri, projection, null, null, null);
-                    int column_index = cursor
-                            .getColumnIndexOrThrow(MediaStore.Audio.Media.DATA);
-                    cursor.moveToFirst();
-                    String path = cursor.getString(column_index);
-                    Uri fileUri = Uri.parse(path);
-                    album.addPhoto(fileUri);
-
-                    for(int i = 0; i < albumList.size(); ++i){
-                        if(albumList.get(i).getId().equals(album.getId())){
-                            albumList.set(i, album);
-                        }
+                    if(photo_id != null){
+                        deletePhoto(photo_id);
+                    }else {
+                        Photo editPhoto = data.getParcelableExtra(EditPhotoActivity.KEY_EDIT_PHOTO);
+                        updatePhoto(editPhoto);
                     }
 
-                    SaveUtils.save(this, MODEL_ALBUM, albumList);
-                    setupPhotos();
-                }
             }
         }
     }
