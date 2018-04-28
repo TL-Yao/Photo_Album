@@ -10,8 +10,7 @@ import android.widget.ImageView;
 import java.io.IOException;
 
 public class ImageUtils {
-    public static void loadImage(@NonNull Context context,
-                                 @NonNull Uri uri,
+    public static void loadImage(@NonNull Uri uri,
                                  @NonNull ImageView imageView) {
 
             System.out.println("in ImageUtils" + uri);

@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.NavigationView;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -32,7 +33,7 @@ import java.io.File;
 import java.util.List;
 
 public class PhotoListActivity extends AppCompatActivity {
-    public static final String KEY_PHOTO_LIST = "photo_list";
+    public static final String KEY_ALBUM = "album";
     private static final String MODEL_ALBUM = "albums";
     public static final  int PICK_IMAGE = 1;
 
@@ -46,9 +47,11 @@ public class PhotoListActivity extends AppCompatActivity {
         setContentView(R.layout.activity_photo_list);
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        album = getIntent().getParcelableExtra(KEY_PHOTO_LIST);
+        album = getIntent().getParcelableExtra(KEY_ALBUM);
         photoList = album.getPhotoList();
         albumList = SaveUtils.read(this,MODEL_ALBUM, new TypeToken<List<Album>>(){});
+        System.out.println("find!" + album.getPhotoList().size());
+
         setupPhotos();
     }
 
@@ -81,7 +84,20 @@ public class PhotoListActivity extends AppCompatActivity {
     private void setupThumbnail(View albumView, final Photo photo){
         ImageView thumbnail = (ImageView) albumView.findViewById(R.id.thumbnail);
 
-        ImageUtils.loadImage(this, photo.getPhotoUri(), thumbnail);
+        ImageUtils.loadImage(photo.getPhotoUri(), thumbnail);
+
+        thumbnail.setOnClickListener(new View.OnClickListener() {
+            //debug: 可能出现，album里出现了改动，但没有反应在showPhotoActivity里
+            //debug: 一会儿要打开返回值的，要更新列表。
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(PhotoListActivity.this, ShowPhotoActivity.class);
+                intent.putExtra(PhotoListActivity.KEY_ALBUM, album);
+                intent.putExtra(ShowPhotoActivity.KEY_PHOTO_ID, photo.getId());
+                startActivity(intent);
+                //startActivityForResult(intent, REQ_CODE_BACK_FROM_PHOTO_LIST);
+            }
+        });
     }
 
     private void pickPicture(){
@@ -122,7 +138,6 @@ public class PhotoListActivity extends AppCompatActivity {
 
                     for(int i = 0; i < albumList.size(); ++i){
                         if(albumList.get(i).getId().equals(album.getId())){
-                            System.out.println("find!" + album.getPhotoList().size());
                             albumList.set(i, album);
                         }
                     }
@@ -162,4 +177,5 @@ public class PhotoListActivity extends AppCompatActivity {
         menuInflater.inflate(R.menu.menu_add, menu);
         return super.onCreateOptionsMenu(menu);
     }
+
 }

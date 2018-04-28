@@ -7,4 +7,6 @@
     <string name="add_album_hint"> Album Name</string>
     <string name="check_btn"> Save </string>
     <string name="delete"> Delete </string>
+    <string name="location_tag">location: </string>
+    <string name="person_tag">person: </string>
 </resources>

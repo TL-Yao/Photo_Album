@@ -123,7 +123,7 @@ public class HomeScreenActivity extends AppCompatActivity {
             //setup cover of the album
             ImageView cover = (ImageView) albumView.findViewById(R.id.cover);
             Uri firstPic = album.getPhotoList().get(0).getPhotoUri();
-            ImageUtils.loadImage(HomeScreenActivity.this, firstPic, cover);
+            ImageUtils.loadImage( firstPic, cover);
         }
         //onclick listener for opening album
         LinearLayout albumFrame = (LinearLayout) albumView.findViewById(R.id.album_frame);
@@ -131,7 +131,7 @@ public class HomeScreenActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(HomeScreenActivity.this, PhotoListActivity.class);
-                intent.putExtra(PhotoListActivity.KEY_PHOTO_LIST, album);
+                intent.putExtra(PhotoListActivity.KEY_ALBUM, album);
                 startActivityForResult(intent, REQ_CODE_BACK_FROM_PHOTO_LIST);
             }
         });

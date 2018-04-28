@@ -5,6 +5,8 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import android.widget.ImageView;
 
+import java.util.UUID;
+
 public class Photo implements Parcelable{
     private String person_tag;
 
@@ -12,17 +14,20 @@ public class Photo implements Parcelable{
 
     private Uri photoUri;
 
+    private String id;
 
     public Photo (String person, String location, Uri uri){
         person_tag = person;
         location_tag = location;
         photoUri = uri;
+        id = UUID.randomUUID().toString();
     }
 
     protected Photo(Parcel in) {
         person_tag = in.readString();
         location_tag = in.readString();
         photoUri = in.readParcelable(Uri.class.getClassLoader());
+        id = in.readString();
     }
 
     @Override
@@ -35,6 +40,7 @@ public class Photo implements Parcelable{
         parcel.writeString(person_tag);
         parcel.writeString(location_tag);
         parcel.writeParcelable(photoUri, i);
+        parcel.writeString(id);
     }
 
     public static final Creator<Photo> CREATOR = new Creator<Photo>() {
@@ -44,10 +50,9 @@ public class Photo implements Parcelable{
         }
 
         @Override
-        public Photo[] newArray(int size) {
-            return new Photo[size];
-        }
+        public Photo[] newArray(int size) { return new Photo[size]; }
     };
 
     public Uri getPhotoUri() { return photoUri; }
+    public String getId() { return id; }
 }
