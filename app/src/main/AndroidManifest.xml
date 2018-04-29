@@ -24,6 +24,7 @@
         <activity android:name=".PhotoListActivity"/>
         <activity android:name=".ShowPhotoActivity"/>
         <activity android:name=".EditPhotoActivity"/>
+        <activity android:name=".DeletePhotoActivity"/>
     </application>
 
 </manifest>

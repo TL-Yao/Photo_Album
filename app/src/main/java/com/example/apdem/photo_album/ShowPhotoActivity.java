@@ -78,7 +78,7 @@ public class ShowPhotoActivity extends AppCompatActivity{
     }
 
     private String buildPersonTag(List<String> listPersonTag){
-        
+
         StringBuilder sb = new StringBuilder();
         for(String s : listPersonTag){
             sb.append(s);

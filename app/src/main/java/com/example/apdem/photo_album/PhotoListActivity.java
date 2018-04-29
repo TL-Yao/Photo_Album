@@ -37,13 +37,13 @@ public class PhotoListActivity extends AppCompatActivity {
     public static final String KEY_ALBUM = "album";
     public static final String KEY_PHOTO = "photo";
     private static final String MODEL_ALBUM = "albums";
-    private static final int REQ_CODE_BACK_FROM_EDITPHOTO = 103;
+    private static final int REQ_CODE_BACK_FROM_DELETE_PHOTO = 103;
     private static final int REQ_CODE_BACK_FROM_SHOW_PHOTO = 104;
     public static final  int PICK_IMAGE = 1;
 
-    Album album;
-    List<Photo> photoList;
-    List<Album> albumList;
+    private Album album;
+    private List<Photo> photoList;
+    private List<Album> albumList;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -54,7 +54,6 @@ public class PhotoListActivity extends AppCompatActivity {
         album = getIntent().getParcelableExtra(KEY_ALBUM);
         photoList = album.getPhotoList();
         albumList = SaveUtils.read(this,MODEL_ALBUM, new TypeToken<List<Album>>(){});
-        System.out.println("find!" + album.getPhotoList().size());
 
         setupPhotos();
     }
@@ -102,16 +101,6 @@ public class PhotoListActivity extends AppCompatActivity {
                 //startActivityForResult(intent, REQ_CODE_BACK_FROM_PHOTO_LIST);
             }
         });
-
-        ImageView edit_photo = (ImageView) albumView.findViewById(R.id.edit_photo_btn);
-        edit_photo.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(PhotoListActivity.this, EditPhotoActivity.class);
-                intent.putExtra(PhotoListActivity.KEY_PHOTO, photo);
-                startActivityForResult(intent, REQ_CODE_BACK_FROM_EDITPHOTO);
-            }
-        });
     }
 
     private void pickPicture(){
@@ -143,34 +132,15 @@ public class PhotoListActivity extends AppCompatActivity {
         }
     }
 
-    private void deletePhoto(String photoId){
-        for(Album currAlbum : albumList){
-            if(currAlbum.getId().equals(album.getId())){
-                for(int i = 0; i < currAlbum.getPhotoList().size(); ++i){
-                    if(currAlbum.getPhotoList().get(i).getId().equals(photoId)){
-                        currAlbum.getPhotoList().remove(i);
-                        album = currAlbum;
-                        SaveUtils.save(this, MODEL_ALBUM, albumList);
-                        setupPhotos();
-                    }
-                }
-            }
-        }
-    }
 
-    private void updatePhoto(Photo editPhoto){
-        for(Album currAlbum : albumList){
-            if(currAlbum.getId().equals(album.getId())){
-                for(int i = 0; i < currAlbum.getPhotoList().size(); ++i){
-                    if(currAlbum.getPhotoList().get(i).getId().equals(editPhoto.getId())){
-                        currAlbum.getPhotoList().set(i, editPhoto);
-                        album = currAlbum;
-                        SaveUtils.save(this, MODEL_ALBUM, albumList);
-                        setupPhotos();
-                    }
-                }
-            }
-        }
+
+    private void updatePhoto(Album editAlbum){
+
+        album = editAlbum;
+        photoList = editAlbum.getPhotoList();
+        albumList = SaveUtils.read(this,MODEL_ALBUM, new TypeToken<List<Album>>(){});
+        setupPhotos();
+
     }
 
     @Override
@@ -194,16 +164,9 @@ public class PhotoListActivity extends AppCompatActivity {
                     Uri uri = data.getData();
                     backFromPickPicture(uri);
                     break;
-                case REQ_CODE_BACK_FROM_EDITPHOTO:
-                    String photo_id = data.getStringExtra(EditPhotoActivity.KEY_DELETE_PHOTO_ID);
-
-                    if(photo_id != null){
-                        deletePhoto(photo_id);
-                    }else {
-                        Photo editPhoto = data.getParcelableExtra(EditPhotoActivity.KEY_EDIT_PHOTO);
-                        updatePhoto(editPhoto);
-                    }
-
+                case REQ_CODE_BACK_FROM_DELETE_PHOTO:
+                    Album editAlbum = data.getParcelableExtra(DeletePhotoActivity.KEY_DELETE_ALBUM);
+                    updatePhoto(editAlbum);
             }
         }
     }
@@ -219,11 +182,15 @@ public class PhotoListActivity extends AppCompatActivity {
             setResult(Activity.RESULT_OK, resultIntent);
             finish();
             return true;
-        } else if (item.getItemId() == R.id.addAlbum_btn) {
+        } else if (item.getItemId() == R.id.add_actionbar_btn) {
             if (!PermissionUtils.checkPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE))
                 PermissionUtils.requestReadExternalStoragePermission(this);
             else
                 pickPicture();
+        } else if (item.getItemId() == R.id.delete_actionbar_btn){
+            Intent intent = new Intent(this, DeletePhotoActivity.class);
+            intent.putExtra(DeletePhotoActivity.KEY_DELETE_ALBUM, album);
+            startActivityForResult(intent, REQ_CODE_BACK_FROM_DELETE_PHOTO);
         }
 
         return super.onOptionsItemSelected(item);
@@ -233,7 +200,7 @@ public class PhotoListActivity extends AppCompatActivity {
     // put add button on action bar
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater menuInflater = getMenuInflater();
-        menuInflater.inflate(R.menu.menu_add, menu);
+        menuInflater.inflate(R.menu.menu_add_delete, menu);
         return super.onCreateOptionsMenu(menu);
     }
 
