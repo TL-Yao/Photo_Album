@@ -68,4 +68,6 @@ public class Photo implements Parcelable{
 
     public void addPerson_tag(String value) { person_tag.add(value); }
     public void addLocation_tag(String value) { location_tag.add(value); }
+    public void deletePersonTag(int index) { person_tag.remove(index); }
+    public void deleteLocationTag(int index) { location_tag.remove(index); }
 }

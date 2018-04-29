@@ -23,8 +23,9 @@
         <activity android:name=".EditAlbumActivity"/>
         <activity android:name=".PhotoListActivity"/>
         <activity android:name=".ShowPhotoActivity"/>
-        <activity android:name=".EditPhotoActivity"/>
+        <activity android:name=".EditTagActivity"/>
         <activity android:name=".DeletePhotoActivity"/>
+        <activity android:name=".MovePhotoActivity"/>
     </application>
 
 </manifest>

@@ -12,4 +12,10 @@
     <string name="person_tag">person: </string>
     <string name="save_and_exit">Save and Back to Photo List</string>
     <string name="save_and_next">Save and Add Next Tag</string>
+    <string name="add_photo_btn">Add Photo</string>
+    <string name="delete_photo_btn">Delete Photo</string>
+    <string name="move_photo_to">Move Photo to...</string>
+    <string name="edit_tag_list">Edit Tag List</string>
+    <string name="delete_selecting_person_tag_btn">Delete Selecting Person Tag</string>
+    <string name="delete_selecting_location_tag_btn">Delete Selecting Location Tag</string>
 </resources>

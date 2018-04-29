@@ -35,7 +35,7 @@ import java.util.List;
 
 public class PhotoListActivity extends AppCompatActivity {
     public static final String KEY_ALBUM = "album";
-    public static final String KEY_PHOTO = "photo";
+    //public static final String KEY_PHOTO = "photo";
     private static final String MODEL_ALBUM = "albums";
     private static final int REQ_CODE_BACK_FROM_DELETE_PHOTO = 103;
     private static final int REQ_CODE_BACK_FROM_SHOW_PHOTO = 104;
@@ -97,8 +97,7 @@ public class PhotoListActivity extends AppCompatActivity {
                 Intent intent = new Intent(PhotoListActivity.this, ShowPhotoActivity.class);
                 intent.putExtra(PhotoListActivity.KEY_ALBUM, album);
                 intent.putExtra(ShowPhotoActivity.KEY_PHOTO_ID, photo.getId());
-                startActivity(intent);
-                //startActivityForResult(intent, REQ_CODE_BACK_FROM_PHOTO_LIST);
+                startActivityForResult(intent, REQ_CODE_BACK_FROM_SHOW_PHOTO);
             }
         });
     }
@@ -167,6 +166,12 @@ public class PhotoListActivity extends AppCompatActivity {
                 case REQ_CODE_BACK_FROM_DELETE_PHOTO:
                     Album editAlbum = data.getParcelableExtra(DeletePhotoActivity.KEY_DELETE_ALBUM);
                     updatePhoto(editAlbum);
+                    break;
+                case REQ_CODE_BACK_FROM_SHOW_PHOTO:
+                    Album editTagAlbum = data.getParcelableExtra(ShowPhotoActivity.KEY_SHOW_PHOTO);
+                    System.out.println(editTagAlbum.getPhotoList().get(0).getPerson_tag().toString());
+                    updatePhoto(editTagAlbum);
+                    break;
             }
         }
     }

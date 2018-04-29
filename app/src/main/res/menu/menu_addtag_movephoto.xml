@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/edit_tag_list_btn"
+        android:icon="@drawable/ic_taglist_black_24dp"
+        app:showAsAction = "withText"
+        android:title="@string/edit_tag_list"/>
+
+    <item
+        android:id="@+id/move_photo_btn"
+        android:icon="@drawable/ic_edit_black_24dp"
+        app:showAsAction = "withText"
+        android:title="@string/move_photo_to"/>
+</menu>

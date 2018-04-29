@@ -1,8 +1,8 @@
 package com.example.apdem.photo_album;
 
-import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -15,7 +15,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.TextView;
 
-import com.example.apdem.photo_album.Util.PermissionUtils;
 import com.example.apdem.photo_album.Util.SaveUtils;
 import com.example.apdem.photo_album.model.Album;
 import com.example.apdem.photo_album.model.Photo;
@@ -24,26 +23,34 @@ import com.google.gson.reflect.TypeToken;
 import java.util.List;
 
 public class ShowPhotoActivity extends AppCompatActivity{
+    //TODO:删掉之后view还是有问题，更新imageview
     private static final String MODEL_ALBUM = "albums";
     public static  final String KEY_PHOTO_ID = "photo_id";
-    private static final int REQ_CODE_BACK_FROM_EDITPHOTO = 103;
+    public static final String KEY_PHOTO = "photo";
+    public static final String KEY_SHOW_PHOTO = "show_photo";
+
+    private static final int REQ_CODE_BACK_FROM_EDIT_TAG = 105;
+    private static final int REQ_CODE_BACK_FROM_MOVE_PHOTO = 106;
 
     private List<Photo> photoList;
     private List<Album> albumList;
     private String photo_id;
-    Photo photo;
+    private Album album;
+    private Photo photo;
+    int index;
+    ViewPager viewPager;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_show_photo);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        Album album = getIntent().getParcelableExtra(PhotoListActivity.KEY_ALBUM);
+        album = getIntent().getParcelableExtra(PhotoListActivity.KEY_ALBUM);
         photoList = album.getPhotoList();
         albumList = SaveUtils.read(this,MODEL_ALBUM, new TypeToken<List<Album>>(){});
         photo_id = getIntent().getStringExtra(KEY_PHOTO_ID);
 
-        ViewPager viewPager = (ViewPager) findViewById(R.id.photo_page);
+        viewPager = (ViewPager) findViewById(R.id.photo_page);
         viewPager.setAdapter(new photoAdapter(getSupportFragmentManager()));
         viewPager.setCurrentItem(findPhoto());
         photo = photoList.get(findPhoto());
@@ -52,12 +59,16 @@ public class ShowPhotoActivity extends AppCompatActivity{
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
                 photo = photoList.get(position);
+                photo_id = photo.getId();
+                index = position;
                 setupUI(position);
             }
 
             @Override
             public void onPageSelected(int position) {
-
+                photo = photoList.get(position);
+                photo_id = photo.getId();
+                index = position;
             }
 
             @Override
@@ -128,6 +139,49 @@ public class ShowPhotoActivity extends AppCompatActivity{
         return position;
     }
 
+    private void updatePhoto(Photo editPhoto){
+        for(Album currAlbum : albumList){
+            if(currAlbum.getId().equals(album.getId())){
+                for(int i = 0; i < currAlbum.getPhotoList().size(); ++i){
+                    if(currAlbum.getPhotoList().get(i).getId().equals(editPhoto.getId())){
+                        currAlbum.getPhotoList().set(i, editPhoto);
+                        album = currAlbum;
+                        photo = editPhoto;
+                        photo_id = photo.getId();
+                        photoList = currAlbum.getPhotoList();
+                        SaveUtils.save(this, MODEL_ALBUM, albumList);
+                        setupUI(i);
+                        return;
+                    }
+                }
+            }
+        }
+    }
+
+    private void deleteMovingPhoto (){
+        albumList = SaveUtils.read(this, MODEL_ALBUM, new TypeToken<List<Album>>(){});
+
+        for(Album currAlbum : albumList){
+            if(currAlbum.getId().equals(album.getId())){
+
+                currAlbum.getPhotoList().remove(index);
+                album = currAlbum;
+                photoList = currAlbum.getPhotoList();
+                if(index >= photoList.size())
+                    index--;
+
+                photo = photoList.get(index);
+                photo_id = photo.getId();
+                SaveUtils.save(this, MODEL_ALBUM, albumList);
+                viewPager.setAdapter(new photoAdapter(getSupportFragmentManager()));
+
+                viewPager.setCurrentItem(index);
+                setupUI(index);
+                return;
+            }
+        }
+    }
+
     @Override
     /* listener for action bar event,
      * back to home screen if user click back button
@@ -135,13 +189,20 @@ public class ShowPhotoActivity extends AppCompatActivity{
      */
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
+            Intent resultIntent = new Intent();
+            resultIntent.putExtra(KEY_SHOW_PHOTO, album);
+            setResult(Activity.RESULT_OK, resultIntent);
             finish();
             return true;
-        }else if(item.getItemId() == R.id.menu_edit){
-            Intent intent = new Intent(ShowPhotoActivity.this, EditPhotoActivity.class);
-            intent.putExtra(PhotoListActivity.KEY_PHOTO, photo);
-            startActivityForResult(intent, REQ_CODE_BACK_FROM_EDITPHOTO);
+        }else if(item.getItemId() == R.id.edit_tag_list_btn){
+            Intent intent = new Intent(this, EditTagActivity.class);
+            intent.putExtra(KEY_PHOTO, photo);
+            startActivityForResult(intent, REQ_CODE_BACK_FROM_EDIT_TAG);
             return true;
+        }else if(item.getItemId() == R.id.move_photo_btn){
+            Intent intent = new Intent(this, MovePhotoActivity.class);
+            intent.putExtra(MovePhotoActivity.KEY_MOVE_PHOTO, photo);
+            startActivityForResult(intent, REQ_CODE_BACK_FROM_MOVE_PHOTO);
         }
 
         return super.onOptionsItemSelected(item);
@@ -150,14 +211,24 @@ public class ShowPhotoActivity extends AppCompatActivity{
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        //TODO
+        if (data != null && resultCode == Activity.RESULT_OK) {
+            switch (requestCode){
+                case REQ_CODE_BACK_FROM_EDIT_TAG:
+                    Photo photo = data.getParcelableExtra(EditTagActivity.KEY_EDIT_PHOTO);
+                    updatePhoto(photo);
+                    break;
+                case REQ_CODE_BACK_FROM_MOVE_PHOTO:
+                    deleteMovingPhoto();
+                    break;
+            }
+        }
     }
 
     @Override
     // put edit button on action bar
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater menuInflater = getMenuInflater();
-        menuInflater.inflate(R.menu.menu_edit, menu);
+        menuInflater.inflate(R.menu.menu_addtag_movephoto, menu);
         return super.onCreateOptionsMenu(menu);
     }
 }

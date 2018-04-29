@@ -44,4 +44,10 @@ public class PhotoFragment extends Fragment {
         Uri uri = Uri.parse(stringUri);
         ImageUtils.loadImage(uri, imageView);
     }
+
+    @Nullable
+    @Override
+    public View getView() {
+        return this.view;
+    }
 }

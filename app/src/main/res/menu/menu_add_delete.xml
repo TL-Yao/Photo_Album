@@ -6,13 +6,13 @@
         android:id="@+id/delete_actionbar_btn"
         android:icon="@drawable/ic_delete_forever_white_24dp"
         app:showAsAction="ifRoom"
-        android:title="@string/add_album_btn"/>
-    
+        android:title="@string/delete_photo_btn"/>
+
     <item
         android:id="@+id/add_actionbar_btn"
         android:icon="@drawable/ic_add_white_24dp"
         app:showAsAction="ifRoom"
-        android:title="@string/add_album_btn"/>
+        android:title="@string/add_photo_btn"/>
 
 
 </menu>
