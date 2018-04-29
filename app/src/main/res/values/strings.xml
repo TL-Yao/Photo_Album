@@ -6,7 +6,10 @@
     <string name = "add_album_btn">add album</string>
     <string name="add_album_hint"> Album Name</string>
     <string name="check_btn"> Save </string>
+    <string name="menu_edit"> Edit </string>
     <string name="delete"> Delete </string>
     <string name="location_tag">location: </string>
     <string name="person_tag">person: </string>
+    <string name="save_and_exit">Save and Back to Photo List</string>
+    <string name="save_and_next">Save and Add Next Tag</string>
 </resources>

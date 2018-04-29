@@ -149,6 +149,7 @@ public class PhotoListActivity extends AppCompatActivity {
                 for(int i = 0; i < currAlbum.getPhotoList().size(); ++i){
                     if(currAlbum.getPhotoList().get(i).getId().equals(photoId)){
                         currAlbum.getPhotoList().remove(i);
+                        album = currAlbum;
                         SaveUtils.save(this, MODEL_ALBUM, albumList);
                         setupPhotos();
                     }
@@ -163,6 +164,7 @@ public class PhotoListActivity extends AppCompatActivity {
                 for(int i = 0; i < currAlbum.getPhotoList().size(); ++i){
                     if(currAlbum.getPhotoList().get(i).getId().equals(editPhoto.getId())){
                         currAlbum.getPhotoList().set(i, editPhoto);
+                        album = currAlbum;
                         SaveUtils.save(this, MODEL_ALBUM, albumList);
                         setupPhotos();
                     }

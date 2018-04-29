@@ -10,6 +10,8 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.TextView;
 
@@ -24,11 +26,12 @@ import java.util.List;
 public class ShowPhotoActivity extends AppCompatActivity{
     private static final String MODEL_ALBUM = "albums";
     public static  final String KEY_PHOTO_ID = "photo_id";
+    private static final int REQ_CODE_BACK_FROM_EDITPHOTO = 103;
 
     private List<Photo> photoList;
     private List<Album> albumList;
     private String photo_id;
-
+    Photo photo;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -43,15 +46,12 @@ public class ShowPhotoActivity extends AppCompatActivity{
         ViewPager viewPager = (ViewPager) findViewById(R.id.photo_page);
         viewPager.setAdapter(new photoAdapter(getSupportFragmentManager()));
         viewPager.setCurrentItem(findPhoto());
-
-        Photo photo = photoList.get(findPhoto());
-
-        TextView person_tag = (TextView) findViewById(R.id.person_value);
-        TextView location_tag = (TextView) findViewById(R.id.location_value);
+        photo = photoList.get(findPhoto());
 
         viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+                photo = photoList.get(position);
                 setupUI(position);
             }
 
@@ -73,8 +73,35 @@ public class ShowPhotoActivity extends AppCompatActivity{
         TextView person_tag = (TextView) findViewById(R.id.person_value);
         TextView location_tag = (TextView) findViewById(R.id.location_value);
 
-        person_tag.setText(photo.getPerson_tag());
-        location_tag.setText(photo.getLocation_tag());
+        person_tag.setText(buildPersonTag(photo.getPerson_tag()));
+        location_tag.setText(buildLocationTag(photo.getLocation_tag()));
+    }
+
+    private String buildPersonTag(List<String> listPersonTag){
+        
+        StringBuilder sb = new StringBuilder();
+        for(String s : listPersonTag){
+            sb.append(s);
+            sb.append(',');
+        }
+
+        if(sb.lastIndexOf(",") != -1)
+            sb.deleteCharAt(sb.lastIndexOf(","));
+
+        return sb.toString();
+    }
+
+    private String buildLocationTag(List <String> listLocationTag){
+        StringBuilder sb = new StringBuilder();
+        for(String s : listLocationTag){
+            sb.append(s);
+            sb.append(',');
+        }
+
+        if(sb.lastIndexOf(",") != -1)
+            sb.deleteCharAt(sb.lastIndexOf(","));
+
+        return sb.toString();
     }
 
     private class photoAdapter extends FragmentPagerAdapter {
@@ -110,8 +137,27 @@ public class ShowPhotoActivity extends AppCompatActivity{
         if (item.getItemId() == android.R.id.home) {
             finish();
             return true;
+        }else if(item.getItemId() == R.id.menu_edit){
+            Intent intent = new Intent(ShowPhotoActivity.this, EditPhotoActivity.class);
+            intent.putExtra(PhotoListActivity.KEY_PHOTO, photo);
+            startActivityForResult(intent, REQ_CODE_BACK_FROM_EDITPHOTO);
+            return true;
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        //TODO
+    }
+
+    @Override
+    // put edit button on action bar
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater menuInflater = getMenuInflater();
+        menuInflater.inflate(R.menu.menu_edit, menu);
+        return super.onCreateOptionsMenu(menu);
     }
 }

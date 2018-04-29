@@ -13,18 +13,20 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.apdem.photo_album.Util.ImageUtils;
 import com.example.apdem.photo_album.model.Photo;
+
+import java.util.List;
 
 public class EditPhotoActivity extends AppCompatActivity{
     public static final String KEY_EDIT_PHOTO = "edit_photo";
     public static final String KEY_DELETE_PHOTO_ID = "delete_photo_id";
 
 
-    Photo photo;
-    String personValue;
-    String locationValue;
+    private Photo photo;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -35,15 +37,13 @@ public class EditPhotoActivity extends AppCompatActivity{
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         photo = getIntent().getParcelableExtra(PhotoListActivity.KEY_PHOTO);
-        personValue = photo.getPerson_tag();
-        locationValue = photo.getLocation_tag();
 
         setupUIForEdit();
     }
 
     private void setupUIForEdit(){
-        ((EditText) findViewById(R.id.edit_person_value)).setText(personValue);
-        ((EditText) findViewById(R.id.edit_location_value)).setText(locationValue);
+        ((EditText) findViewById(R.id.edit_person_value)).getText().clear();
+        ((EditText) findViewById(R.id.edit_location_value)).getText().clear();
 
         LinearLayout delete = (LinearLayout)  findViewById(R.id.delete_photo);
         delete.setOnClickListener(new View.OnClickListener() {
@@ -59,13 +59,41 @@ public class EditPhotoActivity extends AppCompatActivity{
         ImageView imageView = (ImageView) findViewById(R.id.photo_for_delete);
         ImageUtils.loadImage(photo.getPhotoUri(), imageView);
 
+        TextView saveAndNext = (TextView) findViewById(R.id.save_and_next);
+        saveAndNext.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                onClickSaveAndNext();
+            }
+        });
+
+    }
+
+    private void onClickSaveAndNext(){
+        String person_value = ((EditText) findViewById(R.id.edit_person_value)).getText().toString();
+        String location_value = ((EditText) findViewById(R.id.edit_location_value)).getText().toString();
+
+        if(!person_value.equals(""))
+            photo.addPerson_tag(person_value);
+
+        if(!person_value.equals(""))
+            photo.addLocation_tag(location_value);
+
+        Toast toast=Toast.makeText(getApplicationContext(), "successful save!", Toast.LENGTH_SHORT);
+        toast.show();
+        setupUIForEdit();
+
     }
 
     private void saveAndExit(){
-        String person_val = ((EditText) findViewById(R.id.edit_person_value)).getText().toString();
-        String location_val = ((EditText) findViewById(R.id.edit_location_value)).getText().toString();
-        photo.setPerson_tag(person_val);
-        photo.setLocation_tag(location_val);
+        String person_value = ((EditText) findViewById(R.id.edit_person_value)).getText().toString();
+        String location_value = ((EditText) findViewById(R.id.edit_location_value)).getText().toString();
+
+        if(!person_value.equals(""))
+            photo.addPerson_tag(person_value);
+
+        if(!person_value.equals(""))
+            photo.addLocation_tag(location_value);
 
         Intent resultIntent = new Intent();
         resultIntent.putExtra(KEY_EDIT_PHOTO, photo);

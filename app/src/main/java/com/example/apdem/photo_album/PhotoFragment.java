@@ -31,19 +31,10 @@ public class PhotoFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
-/*        if(view != null){
-            ViewGroup parent = (ViewGroup) view.getParent();
 
-            if(parent != null){
-                parent.removeView(view);
-            }
-
-            return view;
-        }else {*/
             view = inflater.inflate(R.layout.photo_fragment,container,false);
             imageView = (ImageView) view.findViewById(R.id.show_photo);
             return view;
-       // }
 
     }
 

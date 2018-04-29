@@ -59,7 +59,7 @@ public class Album implements Parcelable{
     public List<Photo> getPhotoList() { return photoList; }
 
     public void addPhoto (Uri uri){
-        Photo photo = new Photo("","", uri);
+        Photo photo = new Photo(uri);
         photoList.add(photo);
     }
 
