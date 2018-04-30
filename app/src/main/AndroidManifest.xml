@@ -26,6 +26,9 @@
         <activity android:name=".EditTagActivity"/>
         <activity android:name=".DeletePhotoActivity"/>
         <activity android:name=".MovePhotoActivity"/>
+        <activity android:name=".SearchByTagActivity"/>
+        <activity android:name=".SearchResultActivity"/>
+        <activity android:name=".SearchResultPhotoActivity"/>
     </application>
 
 </manifest>

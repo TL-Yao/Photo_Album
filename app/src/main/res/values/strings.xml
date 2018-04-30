@@ -18,4 +18,7 @@
     <string name="edit_tag_list">Edit Tag List</string>
     <string name="delete_selecting_person_tag_btn">Delete Selecting Person Tag</string>
     <string name="delete_selecting_location_tag_btn">Delete Selecting Location Tag</string>
+    <string name="search_by_tag">Search Photo By Tag</string>
+    <string name="and_search_by_tag">And Search By Tag</string>
+    <string name="or_search_by_tag">Or Search By Tag</string>
 </resources>

@@ -17,6 +17,7 @@ import android.widget.TextView;
 import com.example.apdem.photo_album.Util.SaveUtils;
 import com.example.apdem.photo_album.model.Album;
 import com.example.apdem.photo_album.model.Photo;
+import com.example.apdem.photo_album.model.PhotoFragment;
 import com.google.gson.reflect.TypeToken;
 
 import java.util.List;

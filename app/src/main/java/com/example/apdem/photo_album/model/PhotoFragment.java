@@ -1,16 +1,16 @@
-package com.example.apdem.photo_album;
+package com.example.apdem.photo_album.model;
 
 import android.support.v4.app.Fragment;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
+import com.example.apdem.photo_album.R;
 import com.example.apdem.photo_album.Util.ImageUtils;
 
 public class PhotoFragment extends Fragment {

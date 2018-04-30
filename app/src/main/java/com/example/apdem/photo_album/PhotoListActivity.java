@@ -90,8 +90,6 @@ public class PhotoListActivity extends AppCompatActivity {
         ImageView thumbnail = (ImageView) albumView.findViewById(R.id.thumbnail);
         ImageUtils.loadImage(photo.getPhotoUri(), thumbnail);
         thumbnail.setOnClickListener(new View.OnClickListener() {
-            //debug: 可能出现，album里出现了改动，但没有反应在showPhotoActivity里
-            //debug: 一会儿要打开返回值的，要更新列表。
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(PhotoListActivity.this, ShowPhotoActivity.class);

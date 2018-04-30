@@ -63,5 +63,8 @@ public class Album implements Parcelable{
         photoList.add(photo);
     }
 
+    public void addPhotoObject(Photo addPhoto){
+        photoList.add(addPhoto);
+    }
     public void setAlbumName(String newName) { albumName = newName.trim(); }
 }

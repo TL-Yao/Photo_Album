@@ -3,9 +3,14 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
+        android:id="@+id/search_btn"
+        app:showAsAction="ifRoom"
+        android:icon="@drawable/ic_search_white_24dp"
+        android:title="@string/search_by_tag"/>
+
+    <item
         android:id="@+id/addAlbum_btn"
         android:icon="@drawable/ic_add_white_24dp"
-        app:showAsAction="always"
+        app:showAsAction="ifRoom"
         android:title="@string/add_album_btn"/>
-
 </menu>

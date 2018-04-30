@@ -169,8 +169,14 @@ public class HomeScreenActivity extends AppCompatActivity {
     @Override
     //switch to new activity if user click the add button on action bar
     public boolean onOptionsItemSelected(MenuItem item) {
-        Intent intent = new Intent(HomeScreenActivity.this, AddAlbumActivity.class);
-        startActivityForResult(intent, REQ_CODE_ADD_ALBUM);
+        if(item.getItemId() == R.id.addAlbum_btn){
+            Intent intent = new Intent(HomeScreenActivity.this, AddAlbumActivity.class);
+            startActivityForResult(intent, REQ_CODE_ADD_ALBUM);
+        }else if(item.getItemId() == R.id.search_btn){
+            Intent intent = new Intent(HomeScreenActivity.this, SearchByTagActivity.class);
+            startActivity(intent);
+        }
+
         return super.onOptionsItemSelected(item);
     }
 
@@ -178,7 +184,7 @@ public class HomeScreenActivity extends AppCompatActivity {
     // put add button on action bar
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater menuInflater = getMenuInflater();
-        menuInflater.inflate(R.menu.menu_add, menu);
+        menuInflater.inflate(R.menu.menu_add_search, menu);
         return super.onCreateOptionsMenu(menu);
     }
 }
