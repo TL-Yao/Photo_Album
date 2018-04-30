@@ -2,7 +2,6 @@ package com.example.apdem.photo_album;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -23,7 +22,7 @@ import com.google.gson.reflect.TypeToken;
 import java.util.List;
 
 public class ShowPhotoActivity extends AppCompatActivity{
-    //TODO:删掉之后view还是有问题，更新imageview
+
     private static final String MODEL_ALBUM = "albums";
     public static  final String KEY_PHOTO_ID = "photo_id";
     public static final String KEY_PHOTO = "photo";
@@ -124,6 +123,7 @@ public class ShowPhotoActivity extends AppCompatActivity{
 
         @Override
         public int getCount() { return photoList.size(); }
+
     }
 
     private int findPhoto(){
@@ -167,16 +167,16 @@ public class ShowPhotoActivity extends AppCompatActivity{
                 currAlbum.getPhotoList().remove(index);
                 album = currAlbum;
                 photoList = currAlbum.getPhotoList();
+                //deal with null point for the last item in the list
                 if(index >= photoList.size())
                     index--;
+                //deal with null point when there is only one item.
+                if(index > 0)
+                    photo = photoList.get(index);
 
-                photo = photoList.get(index);
                 photo_id = photo.getId();
                 SaveUtils.save(this, MODEL_ALBUM, albumList);
-                viewPager.setAdapter(new photoAdapter(getSupportFragmentManager()));
 
-                viewPager.setCurrentItem(index);
-                setupUI(index);
                 return;
             }
         }
@@ -202,6 +202,7 @@ public class ShowPhotoActivity extends AppCompatActivity{
         }else if(item.getItemId() == R.id.move_photo_btn){
             Intent intent = new Intent(this, MovePhotoActivity.class);
             intent.putExtra(MovePhotoActivity.KEY_MOVE_PHOTO, photo);
+            intent.putExtra(MovePhotoActivity.KEY_MOVE_PHOTO_ALBUM_ID, album.getId());
             startActivityForResult(intent, REQ_CODE_BACK_FROM_MOVE_PHOTO);
         }
 
@@ -219,6 +220,10 @@ public class ShowPhotoActivity extends AppCompatActivity{
                     break;
                 case REQ_CODE_BACK_FROM_MOVE_PHOTO:
                     deleteMovingPhoto();
+                    Intent resultIntent = new Intent();
+                    resultIntent.putExtra(KEY_SHOW_PHOTO, album);
+                    setResult(Activity.RESULT_OK, resultIntent);
+                    finish();
                     break;
             }
         }

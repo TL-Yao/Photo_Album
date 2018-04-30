@@ -169,7 +169,6 @@ public class PhotoListActivity extends AppCompatActivity {
                     break;
                 case REQ_CODE_BACK_FROM_SHOW_PHOTO:
                     Album editTagAlbum = data.getParcelableExtra(ShowPhotoActivity.KEY_SHOW_PHOTO);
-                    System.out.println(editTagAlbum.getPhotoList().get(0).getPerson_tag().toString());
                     updatePhoto(editTagAlbum);
                     break;
             }

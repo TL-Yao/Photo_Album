@@ -24,9 +24,12 @@ import java.util.List;
 public class MovePhotoActivity extends AppCompatActivity {
     private static final String MODEL_ALBUM = "albums";
     public static final String KEY_MOVE_PHOTO = "move_photo";
-    List<Album> albumList;
-    Photo photo;
-//TODO : 把自己本身的album去掉
+    public static final String KEY_MOVE_PHOTO_ALBUM_ID = "move_photo_album_id";
+
+    private List<Album> albumList;
+    private Photo photo;
+    String album_id;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -35,6 +38,7 @@ public class MovePhotoActivity extends AppCompatActivity {
 
         albumList = SaveUtils.read(this, MODEL_ALBUM, new TypeToken<List<Album>>(){});
         photo = getIntent().getParcelableExtra(KEY_MOVE_PHOTO);
+        album_id = getIntent().getStringExtra(KEY_MOVE_PHOTO_ALBUM_ID);
         setupAlbums();
     }
 
@@ -47,6 +51,10 @@ public class MovePhotoActivity extends AppCompatActivity {
 
         boolean isLeft = true;
         for(Album album : albumList){
+            if(album.getId().equals(album_id)){
+                continue;
+            }
+
             if(isLeft){
                 final ViewGroup nullParent = null;
                 View albumView = getLayoutInflater().inflate(R.layout.album_for_move, nullParent);
