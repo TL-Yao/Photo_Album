@@ -115,7 +115,7 @@ public class SearchByTagActivity extends AppCompatActivity {
                     continue;
 
                 //once find one input tag not match or can not completion, set false and break
-            a:  for(int personTagIndex = 0; personTagIndex < personToken.size(); ++ personTagIndex){
+                for(int personTagIndex = 0; personTagIndex < personToken.size(); ++ personTagIndex){
                     String currInputTag = personToken.get(personTagIndex);
 
                     for(int photoPersonTagIndex = 0; photoPersonTagIndex < photo.getPerson_tag().size(); ++photoPersonTagIndex){
@@ -125,38 +125,40 @@ public class SearchByTagActivity extends AppCompatActivity {
                             if(currInputTag.length() < currPhotoTag.length()){
                                 if(!currPhotoTag.substring(0,currInputTag.length()).equals(currInputTag)){
                                     isTarget = false;
-                                    break a;
+                                }else {
+                                    isTarget = true;
+                                    break;
                                 }
                             }else{
                                 isTarget = false;
-                                break a;
                             }
+                        }else{
+                            isTarget = true;
+                            break;
                         }
                     }
                 }
 
-            b:  for(int locationTagIndex = 0; locationTagIndex < locationToken.size() && isTarget; ++locationTagIndex){
+                for(int locationTagIndex = 0; locationTagIndex < locationToken.size() && isTarget; ++locationTagIndex){
                     String currInputTag = locationToken.get(locationTagIndex);
 
                     for(int photoLocationTagIndex = 0; photoLocationTagIndex < photo.getLocation_tag().size(); ++photoLocationTagIndex){
                         String currPhotoTag = photo.getLocation_tag().get(photoLocationTagIndex);
 
-  /*                      if(!currInputTag.equals(currPhotoTag) &&
-                                !currPhotoTag.substring(0,currInputTag.length()).equals(currInputTag)){
-                            isTarget = false;
-                            break b;
-                        }*/
-
-                        if(!currInputTag.equals(currPhotoTag)) {
-                            if (currInputTag.length() < currPhotoTag.length()) {
-                                if (!currPhotoTag.substring(0, currInputTag.length()).equals(currInputTag)) {
+                        if(!currInputTag.equals(currPhotoTag)){
+                            if(currInputTag.length() < currPhotoTag.length()){
+                                if(!currPhotoTag.substring(0,currInputTag.length()).equals(currInputTag)){
                                     isTarget = false;
-                                    break b;
+                                }else {
+                                    isTarget = true;
+                                    break;
                                 }
-                            } else {
+                            }else{
                                 isTarget = false;
-                                break b;
                             }
+                        }else{
+                            isTarget = true;
+                            break;
                         }
                     }
                 }

@@ -11,22 +11,28 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
+import com.example.apdem.photo_album.Util.SaveUtils;
 import com.example.apdem.photo_album.model.Album;
+import com.google.gson.reflect.TypeToken;
+
+import java.util.List;
 
 public class EditAlbumActivity extends AppCompatActivity {
     public static final String KEY_EDIT_ALBUM = "edit_album";
     public static final String KEY_DELETE_ALBUM_ID = "delete_album";
+    private static final String MODEL_ALBUM = "albums";
 
     private Album data;
-
+    List<Album> albumList;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_album);
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
+        albumList = SaveUtils.read(this, MODEL_ALBUM, new TypeToken<List<Album>>(){});
         data = initializeData();
         setupUIForEdit();
     }
@@ -50,14 +56,37 @@ public class EditAlbumActivity extends AppCompatActivity {
         return getIntent().getParcelableExtra(KEY_EDIT_ALBUM);
     }
 
-    private void saveAndExit(){
-        String name = ((EditText) findViewById(R.id.edit_album_name)).getText().toString();
-        data.setAlbumName(name);
+    private boolean isDuplicatedName(String name){
+        for(Album album : albumList){
+            if(album.getAlbumName().equals(name) &&
+                    !album.getId().equals(data.getId())){
+                return true;
+            }
+        }
 
-        Intent resultIntent = new Intent();
-        resultIntent.putExtra(KEY_EDIT_ALBUM, data);
-        setResult(Activity.RESULT_OK, resultIntent);
-        finish();
+        return false;
+    }
+
+    private void saveAndExit(){
+        String name = ((EditText) findViewById(R.id.edit_album_name)).getText().toString().trim();
+
+        if(name.equals("")){
+            showToast("can not resolve empty album name.");
+        }else if(isDuplicatedName(name)){
+            showToast("already exist album with the same name");
+        }else{
+            data.setAlbumName(name);
+
+            Intent resultIntent = new Intent();
+            resultIntent.putExtra(KEY_EDIT_ALBUM, data);
+            setResult(Activity.RESULT_OK, resultIntent);
+            finish();
+        }
+    }
+
+    private void showToast(String text){
+        Toast toast=Toast.makeText(getApplicationContext(),text, Toast.LENGTH_SHORT);
+        toast.show();
     }
 
     @Override

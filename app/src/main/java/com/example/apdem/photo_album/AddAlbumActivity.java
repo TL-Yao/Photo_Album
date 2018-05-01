@@ -10,15 +10,25 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.example.apdem.photo_album.Util.SaveUtils;
 import com.example.apdem.photo_album.model.Album;
+import com.google.gson.reflect.TypeToken;
+
+import java.util.List;
 
 public class AddAlbumActivity extends AppCompatActivity {
     public static final String KEY_NEW_ALBUM = "new_album";
+    private static final String MODEL_ALBUM = "albums";
+
+    List<Album> albumList;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_album);
+        albumList = SaveUtils.read(this, MODEL_ALBUM, new TypeToken<List<Album>>(){});
 
         //the button back to home
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -49,13 +59,36 @@ public class AddAlbumActivity extends AppCompatActivity {
         return super.onCreateOptionsMenu(menu);
     }
 
-    private void saveAndExit(){
-        String name = ((EditText) findViewById(R.id.new_album_name)).getText().toString();
-        Album album = new Album(name);
+    private void showToast(String text){
+        Toast toast=Toast.makeText(getApplicationContext(),text, Toast.LENGTH_SHORT);
+        toast.show();
+    }
 
-        Intent resultIntent = new Intent();
-        resultIntent.putExtra(KEY_NEW_ALBUM, album);
-        setResult(Activity.RESULT_OK, resultIntent);
-        finish();
+    private void saveAndExit(){
+        String name = ((EditText) findViewById(R.id.new_album_name)).getText().toString().trim();
+
+        if(name.equals("")){
+            showToast("can not resolve empty album name.");
+        }else if(isDuplicatedName(name)){
+            showToast("already exist album with the same name");
+        }else{
+            Album album = new Album(name);
+
+            Intent resultIntent = new Intent();
+            resultIntent.putExtra(KEY_NEW_ALBUM, album);
+            setResult(Activity.RESULT_OK, resultIntent);
+            finish();
+        }
+
+    }
+
+    private boolean isDuplicatedName(String name){
+        for(Album album : albumList){
+            if(album.getAlbumName().equals(name)){
+                return true;
+            }
+        }
+
+        return false;
     }
 }
