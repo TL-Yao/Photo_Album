@@ -8,6 +8,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.apdem.photo_album.Util.SaveUtils;
 import com.example.apdem.photo_album.model.Album;
@@ -44,10 +45,15 @@ public class SearchByTagActivity extends AppCompatActivity {
                 final List<String> personToken = splitTag(personSearchValue);
                 final List<String> locationToken = splitTag(locationSearchValue);
 
-                Album resultAlbum = andSearch(personToken, locationToken);
-                Intent intent = new Intent(SearchByTagActivity.this, SearchResultActivity.class);
-                intent.putExtra(SearchResultActivity.KEY_SEARCH_RESULT, resultAlbum);
-                startActivity(intent);
+                if(personToken.size() == 0 && locationToken.size() == 0){
+                    showToast("at least type one tag in one field.");
+                }else{
+                    Album resultAlbum = andSearch(personToken, locationToken);
+                    Intent intent = new Intent(SearchByTagActivity.this, SearchResultActivity.class);
+                    intent.putExtra(SearchResultActivity.KEY_SEARCH_RESULT, resultAlbum);
+                    startActivity(intent);
+                }
+
             }
         });
 
@@ -61,14 +67,22 @@ public class SearchByTagActivity extends AppCompatActivity {
                 final List<String> personToken = splitTag(personSearchValue);
                 final List<String> locationToken = splitTag(locationSearchValue);
 
-                Album resultAlbum = orSearch(personToken, locationToken);
-                Intent intent = new Intent(SearchByTagActivity.this, SearchResultActivity.class);
-                intent.putExtra(SearchResultActivity.KEY_SEARCH_RESULT, resultAlbum);
-                startActivity(intent);
+                if(personToken.size() == 0 && locationToken.size() == 0){
+                    showToast("at least type one tag in one field.");
+                }else{
+                    Album resultAlbum = orSearch(personToken, locationToken);
+                    Intent intent = new Intent(SearchByTagActivity.this, SearchResultActivity.class);
+                    intent.putExtra(SearchResultActivity.KEY_SEARCH_RESULT, resultAlbum);
+                    startActivity(intent);
+                }
             }
         });
     }
 
+    private void showToast(String text){
+        Toast toast=Toast.makeText(getApplicationContext(),text, Toast.LENGTH_SHORT);
+        toast.show();
+    }
     private List<String> splitTag(String input){
         List<String> resultTags = new ArrayList<>();
 
@@ -107,10 +121,16 @@ public class SearchByTagActivity extends AppCompatActivity {
                     for(int photoPersonTagIndex = 0; photoPersonTagIndex < photo.getPerson_tag().size(); ++photoPersonTagIndex){
                         String currPhotoTag = photo.getPerson_tag().get(photoPersonTagIndex);
 
-                        if(!currInputTag.equals(currPhotoTag) &&
-                                !currPhotoTag.substring(0,currInputTag.length()).equals(currInputTag)){
-                            isTarget = false;
-                            break a;
+                        if(!currInputTag.equals(currPhotoTag)){
+                            if(currInputTag.length() < currPhotoTag.length()){
+                                if(!currPhotoTag.substring(0,currInputTag.length()).equals(currInputTag)){
+                                    isTarget = false;
+                                    break a;
+                                }
+                            }else{
+                                isTarget = false;
+                                break a;
+                            }
                         }
                     }
                 }
@@ -121,12 +141,23 @@ public class SearchByTagActivity extends AppCompatActivity {
                     for(int photoLocationTagIndex = 0; photoLocationTagIndex < photo.getLocation_tag().size(); ++photoLocationTagIndex){
                         String currPhotoTag = photo.getLocation_tag().get(photoLocationTagIndex);
 
-                        if(!currInputTag.equals(currPhotoTag) &&
+  /*                      if(!currInputTag.equals(currPhotoTag) &&
                                 !currPhotoTag.substring(0,currInputTag.length()).equals(currInputTag)){
                             isTarget = false;
                             break b;
-                        }
+                        }*/
 
+                        if(!currInputTag.equals(currPhotoTag)) {
+                            if (currInputTag.length() < currPhotoTag.length()) {
+                                if (!currPhotoTag.substring(0, currInputTag.length()).equals(currInputTag)) {
+                                    isTarget = false;
+                                    break b;
+                                }
+                            } else {
+                                isTarget = false;
+                                break b;
+                            }
+                        }
                     }
                 }
 
@@ -152,11 +183,18 @@ public class SearchByTagActivity extends AppCompatActivity {
                         for(int photoPersonTagIndex = 0; photoPersonTagIndex < photo.getPerson_tag().size(); ++photoPersonTagIndex){
                             String currPhotoTag = photo.getPerson_tag().get(photoPersonTagIndex);
 
-                            if(currInputTag.equals(currPhotoTag) ||
-                                    currPhotoTag.substring(0,currInputTag.length()).equals(currInputTag)){
+                            if(currInputTag.equals(currPhotoTag)){
                                 resultAlbum.addPhotoObject(photo);
                                 isFound = true;
                                 break a;
+                            }
+
+                            if (currInputTag.length() < currPhotoTag.length()) {
+                                if (currPhotoTag.substring(0, currInputTag.length()).equals(currInputTag)) {
+                                    resultAlbum.addPhotoObject(photo);
+                                    isFound = true;
+                                    break a;
+                                }
                             }
                         }
                     }
@@ -167,10 +205,16 @@ public class SearchByTagActivity extends AppCompatActivity {
                         for(int photoLocationTagIndex = 0; photoLocationTagIndex < photo.getLocation_tag().size(); ++photoLocationTagIndex){
                             String currPhotoTag = photo.getLocation_tag().get(photoLocationTagIndex);
 
-                            if(currInputTag.equals(currPhotoTag) ||
-                                    currPhotoTag.substring(0,currInputTag.length()).equals(currInputTag)){
+                            if(currInputTag.equals(currPhotoTag)){
                                 resultAlbum.addPhotoObject(photo);
                                 break b;
+                            }
+
+                            if (currInputTag.length() < currPhotoTag.length()) {
+                                if (currPhotoTag.substring(0, currInputTag.length()).equals(currInputTag)) {
+                                    resultAlbum.addPhotoObject(photo);
+                                    break b;
+                                }
                             }
                         }
                     }

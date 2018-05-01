@@ -103,8 +103,8 @@ public class EditTagActivity extends AppCompatActivity{
     }
 
     private void onClickSaveAndNext(){
-        String person_value = ((EditText) findViewById(R.id.edit_person_value)).getText().toString();
-        String location_value = ((EditText) findViewById(R.id.edit_location_value)).getText().toString();
+        String person_value = ((EditText) findViewById(R.id.edit_person_value)).getText().toString().trim();
+        String location_value = ((EditText) findViewById(R.id.edit_location_value)).getText().toString().trim();
 
         if(!person_value.equals("")) {
             photo.addPerson_tag(person_value);
