@@ -85,7 +85,9 @@ public class ShowPhotoActivity extends AppCompatActivity{
         TextView location_tag = (TextView) findViewById(R.id.location_value);
 
         person_tag.setText(buildPersonTag(photo.getPerson_tag()));
+
         location_tag.setText(buildLocationTag(photo.getLocation_tag()));
+        location_tag.setSelected(true);
     }
 
     private String buildPersonTag(List<String> listPersonTag){

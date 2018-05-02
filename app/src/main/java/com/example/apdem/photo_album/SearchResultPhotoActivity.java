@@ -34,7 +34,9 @@ public class SearchResultPhotoActivity extends AppCompatActivity {
         ImageView image = (ImageView) findViewById(R.id.result_photo);
 
         person_tag.setText(buildPersonTag(photo.getPerson_tag()));
+        person_tag.setSelected(true);
         location_tag.setText(buildLocationTag(photo.getLocation_tag()));
+        location_tag.setSelected(true);
         ImageUtils.loadImage(photo.getPhotoUri(), image);
     }
 

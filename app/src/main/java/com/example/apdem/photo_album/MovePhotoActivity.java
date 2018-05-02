@@ -73,6 +73,7 @@ public class MovePhotoActivity extends AppCompatActivity {
 
     private void setupAlbum(View albumView, final Album album) {
         ((TextView) albumView.findViewById(R.id.album_name_move)).setText(album.getAlbumName());
+        ((TextView) albumView.findViewById(R.id.album_name_move)).setSelected(true);
         ((TextView) albumView.findViewById(R.id.num_photo_move)).setText(String.valueOf(album.getNumPhoto()));
 
         if(album.getNumPhoto() != 0) {

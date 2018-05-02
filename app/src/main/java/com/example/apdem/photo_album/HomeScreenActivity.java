@@ -105,6 +105,7 @@ public class HomeScreenActivity extends AppCompatActivity {
     //setup each album view in albums
     private void setupAlbum(View albumView, final Album album) {
         ((TextView) albumView.findViewById(R.id.album_name)).setText(album.getAlbumName());
+        ((TextView) albumView.findViewById(R.id.album_name)).setSelected(true);
         ((TextView) albumView.findViewById(R.id.num_photo)).setText(String.valueOf(album.getNumPhoto()));
 
         //setup edit image button

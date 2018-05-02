@@ -106,6 +106,10 @@ public class SearchByTagActivity extends AppCompatActivity {
 
         Album resultAlbum = new Album("andSearchResult");
 
+        if(albumList == null){
+            return resultAlbum;
+        }
+
         for(Album album : albumList){
             for(Photo photo : album.getPhotoList()){
                 boolean isTarget = true;
@@ -174,6 +178,10 @@ public class SearchByTagActivity extends AppCompatActivity {
 
     private Album orSearch(List<String> personToken, List<String> locationToken){
         Album resultAlbum = new Album("orSearchResult");
+
+        if(albumList == null){
+            return resultAlbum;
+        }
 
         for(Album album : albumList){
             for(Photo photo : album.getPhotoList()){

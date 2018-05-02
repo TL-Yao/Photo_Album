@@ -83,6 +83,9 @@ public class AddAlbumActivity extends AppCompatActivity {
     }
 
     private boolean isDuplicatedName(String name){
+        if(albumList == null){
+            return false;
+        }
         for(Album album : albumList){
             if(album.getAlbumName().equals(name)){
                 return true;
