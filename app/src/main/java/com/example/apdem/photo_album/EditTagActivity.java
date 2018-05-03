@@ -106,6 +106,18 @@ public class EditTagActivity extends AppCompatActivity{
         String person_value = ((EditText) findViewById(R.id.edit_person_value)).getText().toString().trim();
         String location_value = ((EditText) findViewById(R.id.edit_location_value)).getText().toString().trim();
 
+        if(isPersonTagDuplicated(person_value)){
+            Toast toast=Toast.makeText(getApplicationContext(), "person tag value already exist", Toast.LENGTH_SHORT);
+            toast.show();
+            return;
+        }
+
+        if(isLocationTagDuplicated(location_value)){
+            Toast toast=Toast.makeText(getApplicationContext(), "location tag value already exist", Toast.LENGTH_SHORT);
+            toast.show();
+            return;
+        }
+
         if(!person_value.equals("")) {
             photo.addPerson_tag(person_value);
             Toast toast=Toast.makeText(getApplicationContext(), "successful save!", Toast.LENGTH_SHORT);
@@ -121,19 +133,53 @@ public class EditTagActivity extends AppCompatActivity{
     }
 
     private void saveAndExit(){
-        String person_value = ((EditText) findViewById(R.id.edit_person_value)).getText().toString();
-        String location_value = ((EditText) findViewById(R.id.edit_location_value)).getText().toString();
+        String person_value = ((EditText) findViewById(R.id.edit_person_value)).getText().toString().trim();
+        String location_value = ((EditText) findViewById(R.id.edit_location_value)).getText().toString().trim();
+
+        if(isPersonTagDuplicated(person_value)){
+            return;
+        }
+
+        if(isLocationTagDuplicated(location_value)){
+            return;
+        }
 
         if(!person_value.equals(""))
             photo.addPerson_tag(person_value);
 
-        if(!person_value.equals(""))
+        if(!location_value.equals(""))
             photo.addLocation_tag(location_value);
 
         Intent resultIntent = new Intent();
         resultIntent.putExtra(KEY_EDIT_PHOTO, photo);
         setResult(Activity.RESULT_OK, resultIntent);
         finish();
+    }
+
+    private boolean isPersonTagDuplicated(String tag){
+        if(photo.getPerson_tag() == null || photo.getPerson_tag().isEmpty()){
+            return false;
+        }
+
+        for(String currTag : photo.getPerson_tag()){
+            if(tag.equals(currTag))
+                return true;
+        }
+
+        return false;
+    }
+
+    private boolean isLocationTagDuplicated(String tag){
+        if(photo.getLocation_tag() == null || photo.getLocation_tag().isEmpty()){
+            return false;
+        }
+
+        for(String currTag : photo.getLocation_tag()){
+            if(tag.equals(currTag))
+                return true;
+        }
+
+        return false;
     }
 
     @Override
