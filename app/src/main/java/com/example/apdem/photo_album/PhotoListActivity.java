@@ -117,7 +117,7 @@ public class PhotoListActivity extends AppCompatActivity {
             String path = cursor.getString(column_index);
             Uri fileUri = Uri.parse(path);
             album.addPhoto(fileUri);
-
+ 
             for(int i = 0; i < albumList.size(); ++i){
                 if(albumList.get(i).getId().equals(album.getId())){
                     albumList.set(i, album);
